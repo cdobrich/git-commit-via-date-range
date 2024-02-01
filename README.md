@@ -1,6 +1,6 @@
 # git-commit-via-date-range
 
-Add files to a Git repository based on specified date ranges.
+Add files to a Git repository based on specified date ranges. Tested on Linux.
 
 This program honors all normal Git configurations, like .gitignore files and such.
 
@@ -28,13 +28,13 @@ General form:
 
 Used when the Git repository has prior commits to compare against.
 
-    python git-commit-via-date-range.py /path/to/your/git/repository 2022-01-01 UTC
+    python git-commit-via-date-range.py /path/to/your/git/repository 2024-01-25 America/Los_Angeles
 
 ### Case 2: With starting date
 
 Used when the local Git repository has no prior commits.
 
-    python git-commit-via-date-range.py /path/to/your/git/repository 2022-01-01 UTC 2022-01-31 PST
+    python git-commit-via-date-range.py /path/to/your/git/repository 2024-01-25 America/Los_Angeles 2024-02-01 America/New_York
 
 ### Usage with local Python Environment
 
