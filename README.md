@@ -12,7 +12,7 @@ pip install GitPython pytz
 
     python3 -m venv '.venv'
     source .venv/bin/activate
-    pip install GitPython
+    pip install GitPython pytz
 
 ## Assumptions
 
