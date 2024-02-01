@@ -57,8 +57,12 @@ def parse_date_with_timezone(date_str, timezone_str):
 
 def main():
     if len(sys.argv) < 3 or len(sys.argv) > 6:
-        logger.error(
+        print(
             "Usage: python script.py <path_to_directory> [<start_date> <start_timezone>] [<end_date> <end_timezone>]")
+        print()
+        print(
+            "Example usage: "
+            "python script.py /path/to/your/git/repository 2024-01-25 America/Los_Angeles 2024-02-01 America/New_York")
         sys.exit(1)
 
     directory_path = sys.argv[1]
