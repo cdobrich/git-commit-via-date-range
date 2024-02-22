@@ -1,3 +1,4 @@
+import argparse
 import os
 import sys
 import datetime
@@ -56,6 +57,11 @@ def parse_date_with_timezone(date_str, timezone_str):
 
 
 def main():
+    # parser = argparse.ArgumentParser(description="Add files to a Git repository based on specified date ranges.")
+    # parser.add_argument("--date-start", help="")
+    # parser.add_argument("--date-end", help="")
+    # args = parser.parse_args()
+
     if len(sys.argv) < 3 or len(sys.argv) > 6:
         print(
             "Usage: python script.py <path_to_directory> [<start_date> <start_timezone>] [<end_date> <end_timezone>]")

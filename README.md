@@ -10,6 +10,8 @@ pip install GitPython pytz
 
 #### Create a local python environment
 
+If the dependency `GitPython` and `pytz` are not available on the system, you can install them locally to an isolated Python environment.
+
     python3 -m venv '.venv'
     source .venv/bin/activate
     pip install GitPython pytz
@@ -20,9 +22,13 @@ The input path argument (base folder) contains the Git repository you want to co
 
 ## Usage
 
-General form:
+General form (when Git has prior commits to compare against):
 
     python git-commit-via-date-range.py /path/to/folder/with/git/repository YYYY-MM-DD <timezone>
+
+Starting form (when the local Git repository has no prior commits):
+
+    python git-commit-via-date-range.py /path/to/folder/with/git/repository YYYY-MM-DD <timezone> YYYY-MM-DD <timezone>
 
 ### Case 1: No starting date 
 
