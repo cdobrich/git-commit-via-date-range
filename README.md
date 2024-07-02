@@ -36,14 +36,20 @@ Used when the Git repository has prior commits to compare against.
 
     python git-commit-via-date-range.py /path/to/your/git/repository 2024-01-25 America/Los_Angeles
 
+    Example: 
+        python git-commit-via-date-range.py $HOME/images 2024-02-01 America/New_York
+
 ### Case 2: With starting date
 
 Used when the local Git repository has no prior commits.
 
     python git-commit-via-date-range.py /path/to/your/git/repository 2024-01-25 America/Los_Angeles 2024-02-01 America/New_York
 
+    Example: 
+        python git-commit-via-date-range.py $HOME/images 2024-01-25 America/Los_Angeles 2024-02-01 America/New_York
+
 ### Usage with local Python Environment
 
-    source /home/username/code/python/git-commit-via-date-range/.venv/bin/activate
-    python /home/username/code/python/git-commit-via-date-range/git-commit-via-date-range.py
+    source /home/$USER/code/python/git-commit-via-date-range/.venv/bin/activate
+    python /home/$USER/code/python/git-commit-via-date-range/git-commit-via-date-range.py
 
