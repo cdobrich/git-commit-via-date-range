@@ -4,17 +4,26 @@ import datetime
 import logging
 import pytz
 from git import Repo
+from tqdm import tqdm
+
+
+# Custom filter class
+class NoErrorFilter(logging.Filter):
+    def filter(self, record):
+        return record.levelno != logging.ERROR
+
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
+logger.addFilter(NoErrorFilter())
 
 
 def get_changed_files(repo, since_date):
     changed_files = []
     since_date = since_date.replace(tzinfo=pytz.UTC)  # Ensure since_date is timezone-aware (UTC in this case)
 
-    for item in repo.untracked_files:
+    for item in tqdm(repo.untracked_files, desc="Checking files", ncols=100):
         file_path = os.path.join(repo.working_dir, item)
 
         try:
@@ -26,6 +35,7 @@ def get_changed_files(repo, since_date):
         except (FileNotFoundError, OSError) as e:
             handle_file_error(item, e)
 
+    logger.info("All UNTRACKED FILES processed: {}".format(len(repo.untracked_files))
     return changed_files
 
 
