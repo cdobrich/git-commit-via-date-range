@@ -1,10 +1,9 @@
-import argparse
 import os
 import sys
 import datetime
 import logging
-from git import Repo
 import pytz
+from git import Repo
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -13,14 +12,14 @@ logger = logging.getLogger(__name__)
 
 def get_changed_files(repo, since_date):
     changed_files = []
+    since_date = since_date.replace(tzinfo=pytz.UTC)  # Ensure since_date is timezone-aware (UTC in this case)
+
     for item in repo.untracked_files:
-        # Check if the file was created after the specified date
         file_path = os.path.join(repo.working_dir, item)
 
         try:
             file_stat = os.stat(file_path)
-            create_time = datetime.datetime.fromtimestamp(file_stat.st_ctime)
-            create_time = create_time.replace(tzinfo=pytz.UTC)
+            create_time = datetime.datetime.fromtimestamp(file_stat.st_ctime, tz=pytz.UTC)
 
             if create_time >= since_date:
                 changed_files.append(item)
@@ -56,19 +55,29 @@ def parse_date_with_timezone(date_str, timezone_str):
     return timezone.localize(naive_date)
 
 
+def print_help():
+    print(
+        "Usage: python script.py <path_to_directory> [<start_date> <start_timezone>] [<end_date> <end_timezone>]")
+    print()
+    print(
+        "Example usage with no prior commits: "
+        "   python script.py /path/to/your/git/repository 2024-01-25 America/Los_Angeles"
+        "Example usage with no prior commits: "
+        "   python script.py /path/to/your/git/repository 2024-01-25 America/Los_Angeles 2024-02-01 America/New_York")
+
+
 def main():
     # parser = argparse.ArgumentParser(description="Add files to a Git repository based on specified date ranges.")
     # parser.add_argument("--date-start", help="")
     # parser.add_argument("--date-end", help="")
     # args = parser.parse_args()
 
+    if len(sys.argv) >= 2 and (sys.argv[1] == "-h" or sys.argv[1] == "--help"):
+        print_help()
+        sys.exit(1)
+
     if len(sys.argv) < 3 or len(sys.argv) > 6:
-        print(
-            "Usage: python script.py <path_to_directory> [<start_date> <start_timezone>] [<end_date> <end_timezone>]")
-        print()
-        print(
-            "Example usage: "
-            "python script.py /path/to/your/git/repository 2024-01-25 America/Los_Angeles 2024-02-01 America/New_York")
+        print_help()
         sys.exit(1)
 
     directory_path = sys.argv[1]
@@ -86,8 +95,11 @@ def main():
     start_date = datetime.datetime.min
     end_date = datetime.datetime.max
 
-    if len(sys.argv) >= 5:
+    if len(sys.argv) == 4:
         start_date = parse_date_with_timezone(sys.argv[2], sys.argv[3])
+    else:
+        logger.error("Error: No start dates specified.")
+        sys.exit(1)
 
     if len(sys.argv) == 6:
         end_date = parse_date_with_timezone(sys.argv[4], sys.argv[5])

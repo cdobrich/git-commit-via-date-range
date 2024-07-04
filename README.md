@@ -53,3 +53,12 @@ Used when the local Git repository has no prior commits.
     source /home/$USER/code/python/git-commit-via-date-range/.venv/bin/activate
     python /home/$USER/code/python/git-commit-via-date-range/git-commit-via-date-range.py
 
+
+### Usage with local Python Environment
+
+    source /home/$USER/code/python/git-commit-via-date-range/.venv/bin/activate
+    python /home/$USER/code/python/git-commit-via-date-range/git-commit-via-date-range.py
+    
+# TODO
+
+Write some unit-tests to verify things work after making further changes or features.
