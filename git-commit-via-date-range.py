@@ -10,7 +10,7 @@ from tqdm import tqdm
 # Custom filter class
 class NoErrorFilter(logging.Filter):
     def filter(self, record):
-        return record.levelno != logging.ERROR
+        return record.levelno not in (logging.ERROR, logging.WARNING)
 
 
 # Configure logging
@@ -35,7 +35,7 @@ def get_changed_files(repo, since_date):
         except (FileNotFoundError, OSError) as e:
             handle_file_error(item, e)
 
-    logger.info("All UNTRACKED FILES processed: {}".format(len(repo.untracked_files))
+    logger.info("All UNTRACKED FILES processed: {}".format(len(repo.untracked_files)))
     return changed_files
 
 
