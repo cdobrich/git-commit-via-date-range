@@ -3,6 +3,7 @@ import sys
 import datetime
 import logging
 import pytz
+import git
 from git import Repo
 from tqdm import tqdm
 
@@ -17,6 +18,14 @@ class NoErrorFilter(logging.Filter):
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 logger.addFilter(NoErrorFilter())
+
+# Attempt to import the git_lfs module
+try:
+    import git_lfs
+
+    use_git_lfs_module = True
+except ImportError:
+    use_git_lfs_module = False
 
 
 def get_changed_files(repo, since_date):
@@ -47,13 +56,39 @@ def handle_file_error(file_path, error):
         logger.error(f"Error accessing file {file_path}: {error}")
 
 
-def commit_changes(repo, changed_files):
-    if changed_files:
-        repo.index.add(changed_files)
+def track_large_files(repo, large_files):
+    if use_git_lfs_module:
+        lfs = git_lfs.LFS(repo.working_dir)
+        for large_file in large_files:
+            lfs.track(large_file)
+    else:
+        for large_file in large_files:
+            os.system(f"git lfs track '{large_file}'")
+    repo.git.add('.gitattributes')  # Ensure .gitattributes is added
+
+
+def commit_changes(repo, changed_files, lfs_threshold_mb=100):
+    lfs_threshold_bytes = lfs_threshold_mb * 1024 * 1024
+    large_files = []
+    normal_files = []
+
+    for file_path in changed_files:
+        file_full_path = os.path.join(repo.working_dir, file_path)
+        if os.path.getsize(file_full_path) > lfs_threshold_bytes:
+            large_files.append(file_path)
+        else:
+            normal_files.append(file_path)
+
+    if large_files:
+        # Track large files with Git LFS
+        track_large_files(repo, large_files)
+
+    if normal_files or large_files:
+        repo.index.add(normal_files + large_files)
         repo.index.commit("Auto commit changes")
         logger.info("Changes committed to Git repository.")
         logger.info("Committed files:")
-        for file_path in changed_files:
+        for file_path in normal_files + large_files:
             logger.info(f"- {file_path}")
     else:
         logger.info("No changes to commit.")
