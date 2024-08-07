@@ -1,20 +1,31 @@
 # git-commit-via-date-range
 
-Add files to a Git repository based on specified date ranges. Tested on Linux.
+Add files to a Git repository based on specified date ranges. Tested on Ubuntu Linux. There is nothing specific to the Linux operating system though, so this should be fairly universal.
 
-This program honors all normal Git configurations, like .gitignore files and such.
+This program honors all normal Git configurations, like `.gitignore` files and such. This means this program will ignore file types configured in the `.gitignore` file.
 
 ## Dependencies / Requirements
 
+This project has only 2 dependencies:
+
+1. GitPython
+2. pytz
+
+To install them using Pip:
+
+```
 pip install GitPython pytz
+```
 
 #### Create a local python environment
 
 If the dependency `GitPython` and `pytz` are not available on the system, you can install them locally to an isolated Python environment.
 
-    python3 -m venv '.venv'
-    source .venv/bin/activate
-    pip install GitPython pytz
+```
+python3 -m venv '.venv'
+source .venv/bin/activate
+pip install GitPython pytz
+```
 
 ## Assumptions
 
